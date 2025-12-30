@@ -50,7 +50,7 @@ Follow the interactive command-line interface to configure and spin up your hone
 
 ### Production Deployments
 
-For production deployments, follow the production deployment guide in the documentation hwew https://honeymesh.readthedocs.io/en/latest/docs/Production%20Deployment%20Recommendations
+For production deployments, follow the production deployment guide in the documentation hwew https://honeyforge.readthedocs.io/en/latest/docs/Production%20Deployment%20Recommendations
 
 ### Industry Templates
 
