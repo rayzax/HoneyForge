@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 generatePickle.py - Cowrie Filesystem Pickle Generator
-Adapted from Cowrie's createfs.py for HoneyMesh integration
+Adapted from Cowrie's createfs.py for HoneyForge integration
 """
 
 import fnmatch

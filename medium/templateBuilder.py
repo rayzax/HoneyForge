@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Interactive Template Builder for HoneyMesh
+Interactive Template Builder for HoneyForge
 User-friendly UI for creating custom YAML honeypot templates
 """
 
@@ -121,7 +121,7 @@ class TemplateBuilder:
     def run(self):
         """Main template builder flow"""
         self.clear_screen()
-        self.print_header("HoneyMesh Template Builder")
+        self.print_header("HoneyForge Template Builder")
         
         print(f"{Colors.CYAN}Create custom honeypot templates with ease!{Colors.END}\n")
         
@@ -161,7 +161,7 @@ class TemplateBuilder:
         
         self.template['metadata']['category'] = self.get_input("Category", "custom")
         self.template['metadata']['version'] = self.get_input("Version", "1.0")
-        self.template['metadata']['author'] = self.get_input("Author", "HoneyMesh User")
+        self.template['metadata']['author'] = self.get_input("Author", "HoneyForge User")
         
         print(f"\n{Colors.GREEN}✓ Metadata configured{Colors.END}")
         input(f"{Colors.CYAN}Press Enter to continue...{Colors.END}")
@@ -670,7 +670,7 @@ WARNING: Authorized access only. All activity is monitored and logged.
         
         print(f"\n{Colors.GREEN}{Colors.BOLD}✓ Template saved successfully!{Colors.END}")
         print(f"{Colors.CYAN}Location: {output_path}{Colors.END}")
-        print(f"\n{Colors.YELLOW}You can now use this template in HoneyMesh!{Colors.END}")
+        print(f"\n{Colors.YELLOW}You can now use this template in HoneyForge!{Colors.END}")
     
     def count_directories(self, structure: Dict) -> int:
         """Count total directories in structure"""

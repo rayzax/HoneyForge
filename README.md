@@ -54,7 +54,7 @@ For production deployments, follow the production deployment guide in the docume
 
 ### Industry Templates
 
-HoneyMesh comes preloaded with 3 industry template customizations:
+HoneyForge comes preloaded with 3 industry template customizations:
 
 - **Epic Healthcare Server** - Simulates an Epic electronic health record (EHR) production environment
 - **Financial Banking Server** - Mimics a Jack Henry Symitar core banking platform
@@ -66,8 +66,8 @@ To learn more about templates and template structure, refer to the templates doc
 
 ## Disclaimer
 
-HoneyMesh is intended for educational, research, and security testing purposes only. Deploying honeypots involves exposing services to potential attackers. Users must ensure they have explicit permission to run HoneyMesh on any network or system.
+HoneyForge is intended for educational, research, and security testing purposes only. Deploying honeypots involves exposing services to potential attackers. Users must ensure they have explicit permission to run HoneyForge on any network or system.
 
-The creators and contributors of HoneyMesh are not responsible for any misuse, damage, or legal consequences arising from the deployment or use of this software. Always follow applicable laws, regulations, and organizational policies when using HoneyMesh.
+The creators and contributors of HoneyForge are not responsible for any misuse, damage, or legal consequences arising from the deployment or use of this software. Always follow applicable laws, regulations, and organizational policies when using HoneyForge.
 
-Users should deploy HoneyMesh in isolated, controlled environments, and never expose it to production or sensitive networks without proper safeguards.
+Users should deploy HoneyForge in isolated, controlled environments, and never expose it to production or sensitive networks without proper safeguards.

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-YAML Template Loader for HoneyMesh Medium Interaction Honeypots
+YAML Template Loader for HoneyForge Medium Interaction Honeypots
 Loads honeypot templates from YAML files
 """
 
@@ -216,7 +216,7 @@ class TemplateExporter:
                 'description': f"Exported template from {honeypot_info.get('name')}",
                 'category': 'custom',
                 'version': '1.0',
-                'author': 'HoneyMesh User'
+                'author': 'HoneyForge User'
             },
             'configuration': {
                 'hostname': honeypot_info.get('hostname', 'server.local'),

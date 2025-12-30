@@ -3,7 +3,7 @@ metadata:
   description: Custom honeypot template
   category: government
   version: '1.0'
-  author: HoneyMesh User
+  author: HoneyForge User
 configuration:
   hostname: server-prd-01.local
   ssh_banner: blah blah blah

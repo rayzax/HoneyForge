@@ -6,7 +6,7 @@ metadata:
   description: "Simulates a standard corporate IT production server"
   category: "corporate"
   version: "1.0"
-  author: "HoneyMesh"
+  author: "HoneyForge"
 
 configuration:
   hostname: "app-server-prd01.corporate.local"

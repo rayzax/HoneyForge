@@ -6,7 +6,7 @@ metadata:
   description: "Simulates a banking/financial services production server"
   category: "financial"
   version: "1.0"
-  author: "HoneyMesh"
+  author: "HoneyForge"
 
 configuration:
   hostname: "core-banking-prd01.firstnational.com"
