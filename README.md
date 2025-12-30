@@ -1,19 +1,21 @@
-# HoneyMesh
+# HoneyForge
+
+<img width="975" height="325" alt="image" src="https://github.com/user-attachments/assets/037a962a-b9db-4516-8451-70bfeae9b8be" />
 
 A self-hosted honeypot deployment platform that simplifies honeypot creation and management for security professionals, researchers, and educational institutions.
 
-## Getting Started with HoneyMesh
+## Getting Started with HoneyForge
 
 ### Step 1: Clone the Repository
 
 ```bash
-git clone https://github.com/rayzax/HoneyMesh
+git clone https://github.com/rayzax/HoneyForge
 ```
 
-### Step 2: Change Directory to HoneyMesh
+### Step 2: Change Directory to HoneyForge
 
 ```bash
-cd HoneyMesh
+cd HoneyForge
 ```
 
 ### Step 3: Make the Installation Script Executable
@@ -32,10 +34,10 @@ sudo ./installDependencies.sh
 
 After installation completes, log out of your system and log back in to apply Docker group permissions.
 
-### Step 6: Run HoneyMesh
+### Step 6: Run HoneyForge
 
 ```bash
-python3 honeymesh.py
+python3 honeyforge.py
 ```
 
 ### Step 7: Follow the CLI
