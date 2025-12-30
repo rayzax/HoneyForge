@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-HoneyMesh Medium Interaction Module
+HoneyForge Medium Interaction Module
 Integration layer for custom honeypot deployment
 """
 

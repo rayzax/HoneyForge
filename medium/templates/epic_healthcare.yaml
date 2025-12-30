@@ -6,7 +6,7 @@ metadata:
   description: "Simulates an Epic EHR production server for healthcare environments"
   category: "healthcare"
   version: "1.0"
-  author: "HoneyMesh"
+  author: "HoneyForge"
 
 configuration:
   hostname: "epic-prd-web01.mercy-health.org"

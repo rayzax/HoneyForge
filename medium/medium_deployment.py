@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-HoneyMesh - Medium Interaction Honeypot Deployment
+HoneyForge - Medium Interaction Honeypot Deployment
 Handles custom Cowrie honeypot deployments with industry templates
 """
 
@@ -17,7 +17,7 @@ from typing import Dict, List, Optional
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 try:
-    from honeymesh import Colors
+    from honeyforge import Colors
     from .generatePickle import generate_pickle
     from .template_loader import (
         TemplateLibrary,
@@ -41,7 +41,7 @@ class MediumDeploymentManager:
         Initialize medium deployment manager
 
         Args:
-            parent_app: Reference to main HoneyMeshApp instance
+            parent_app: Reference to main HoneyForgeApp instance
         """
         self.app = parent_app
         self.templates_dir = Path("./medium/templates")
@@ -882,7 +882,7 @@ filter {
 output {
   elasticsearch {
     hosts => ["elasticsearch:9200"]
-    index => "honeymesh-%{[honeypot]}-%{+YYYY.MM.dd}"
+    index => "honeyforge-%{[honeypot]}-%{+YYYY.MM.dd}"
   }
 
   stdout {
@@ -943,13 +943,13 @@ logging.files:
 services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
-    container_name: honeymesh-elasticsearch-{name}
+    container_name: honeyforge-elasticsearch-{name}
     environment:
       - discovery.type=single-node
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
       - xpack.security.enabled=false
       - xpack.security.enrollment.enabled=false
-      - cluster.name=honeymesh-cluster
+      - cluster.name=honeyforge-cluster
       - bootstrap.memory_lock=true
     ulimits:
       memlock:
@@ -960,15 +960,15 @@ services:
     ports:
       - "9200:9200"
     networks:
-      - honeymesh
+      - honeyforge
     restart: unless-stopped
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.11.0
-    container_name: honeymesh-kibana-{name}
+    container_name: honeyforge-kibana-{name}
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-      - SERVER_NAME=honeymesh-kibana
+      - SERVER_NAME=honeyforge-kibana
       - SERVER_HOST=0.0.0.0
     volumes:
       - kibana-data:/usr/share/kibana/data
@@ -977,12 +977,12 @@ services:
     depends_on:
       - elasticsearch
     networks:
-      - honeymesh
+      - honeyforge
     restart: unless-stopped
 
   logstash:
     image: docker.elastic.co/logstash/logstash:8.11.0
-    container_name: honeymesh-logstash-{name}
+    container_name: honeyforge-logstash-{name}
     environment:
       - "LS_JAVA_OPTS=-Xms512m -Xmx512m"
     volumes:
@@ -994,12 +994,12 @@ services:
     depends_on:
       - elasticsearch
     networks:
-      - honeymesh
+      - honeyforge
     restart: unless-stopped
 
   {name}:
     image: cowrie/cowrie:latest
-    container_name: honeymesh-{name}
+    container_name: honeyforge-{name}
     hostname: {hostname}
     restart: unless-stopped
     user: "2000:2000"
@@ -1023,7 +1023,7 @@ services:
       - ./txtcmds:/cowrie/cowrie-git/txtcmds:ro
 
     networks:
-      - honeymesh
+      - honeyforge
 
     environment:
       - COWRIE_HOSTNAME={hostname}
@@ -1033,7 +1033,7 @@ services:
 
   filebeat:
     image: docker.elastic.co/beats/filebeat:8.11.0
-    container_name: honeymesh-filebeat-{name}
+    container_name: honeyforge-filebeat-{name}
     user: root
     command: filebeat -e --strict.perms=false
     volumes:
@@ -1044,11 +1044,11 @@ services:
       - logstash
       - {name}
     networks:
-      - honeymesh
+      - honeyforge
     restart: unless-stopped
 
 networks:
-  honeymesh:
+  honeyforge:
     driver: bridge
 
 volumes:
@@ -1123,17 +1123,17 @@ volumes:
             pass
 
     def ensure_docker_network(self):
-        """Create honeymesh Docker network if it doesn't exist"""
+        """Create honeyforge Docker network if it doesn't exist"""
         try:
             result = subprocess.run(
-                ['docker', 'network', 'inspect', 'honeymesh'],
+                ['docker', 'network', 'inspect', 'honeyforge'],
                 capture_output=True,
                 text=True
             )
 
             if result.returncode != 0:
                 subprocess.run(
-                    ['docker', 'network', 'create', 'honeymesh'],
+                    ['docker', 'network', 'create', 'honeyforge'],
                     check=True,
                     capture_output=True
                 )
@@ -1178,7 +1178,7 @@ volumes:
         print(f"Name:             {config['deployment_name']}")
         print(f"Template:         {config['template_name']}")
         print(f"Hostname:         {config['hostname']}")
-        print(f"Container:        honeymesh-{config['deployment_name']}")
+        print(f"Container:        honeyforge-{config['deployment_name']}")
         print("─" * 70)
 
         print(f"\n{Colors.BOLD}Access Your Honeypot:{Colors.END}")

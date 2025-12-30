@@ -1,6 +1,6 @@
-# HoneyMesh Python Dependencies
+# HoneyForge Python Dependencies
 # Self-hosted honeypot deployment platform
-# https://github.com/rayzax/HoneyMesh
+# https://github.com/rayzax/HoneyForge
 
 # Docker Python SDK - Required for Docker container management
 docker>=6.0.0

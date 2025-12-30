@@ -1,6 +1,6 @@
 #!/bin/bash
 ################################################################################
-# HoneyMesh Dependency Installation Script
+# HoneyForge Dependency Installation Script
 # Automatically installs and configures all required dependencies
 #
 # This script installs:
@@ -394,8 +394,8 @@ print_next_steps() {
     echo -e "${YELLOW}1. Logout and login again for Docker group changes to take effect${NC}"
     echo -e "${YELLOW}2. Verify installation by running:${NC}"
     echo -e "   ${CYAN}python3 scripts/DependencyCheck.py${NC}"
-    echo -e "${YELLOW}3. Start HoneyMesh:${NC}"
-    echo -e "   ${CYAN}python3 honeymesh.py${NC}\n"
+    echo -e "${YELLOW}3. Start HoneyForge:${NC}"
+    echo -e "   ${CYAN}python3 honeyforge.py${NC}\n"
 
     echo -e "${BLUE}${BOLD}Optional:${NC}"
     echo -e "• Check Docker status: ${CYAN}docker ps${NC}"
@@ -406,9 +406,9 @@ print_next_steps() {
 
 # Main installation flow
 main() {
-    log_header "HoneyMesh Dependency Installer"
+    log_header "HoneyForge Dependency Installer"
 
-    echo -e "${CYAN}This script will install all required dependencies for HoneyMesh:${NC}"
+    echo -e "${CYAN}This script will install all required dependencies for HoneyForge:${NC}"
     echo -e "  • Docker & Docker Compose"
     echo -e "  • Python 3.7+ and pip"
     echo -e "  • curl"

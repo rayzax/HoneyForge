@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-HoneyMesh - Self-hosted honeypot deployment platform
+HoneyForge - Self-hosted honeypot deployment platform
 A simplified honeypot creation and management tool for security professionals
 """
 
@@ -109,7 +109,7 @@ class Colors:
     BOLD = '\033[1m'
     END = '\033[0m'
 
-class HoneyMeshApp:
+class HoneyForgeApp:
     def __init__(self):
         self.data_dir = Path("./honeypot-data")
         self.config_file = self.data_dir / "config.json"
@@ -119,17 +119,17 @@ class HoneyMeshApp:
         self.containers = {}
 
         # Setup logging
-        self.log_dir = Path("./honeymesh-logs")
+        self.log_dir = Path("./honeyforge-logs")
         self.log_dir.mkdir(exist_ok=True)
         self.setup_logging()
 
         # Service definitions
         self.services = {
-            'elasticsearch': 'honeymesh-elasticsearch',
-            'logstash': 'honeymesh-logstash',
-            'filebeat': 'honeymesh-filebeat',
-            'cowrie': 'honeymesh-cowrie',
-            'kibana': 'honeymesh-kibana'
+            'elasticsearch': 'honeyforge-elasticsearch',
+            'logstash': 'honeyforge-logstash',
+            'filebeat': 'honeyforge-filebeat',
+            'cowrie': 'honeyforge-cowrie',
+            'kibana': 'honeyforge-kibana'
         }
 
         self.medium_manager = None
@@ -137,10 +137,10 @@ class HoneyMeshApp:
     def setup_logging(self):
         """Setup comprehensive logging to file"""
         timestamp = time.strftime("%Y%m%d_%H%M%S")
-        log_file = self.log_dir / f"honeymesh_{timestamp}.log"
+        log_file = self.log_dir / f"honeyforge_{timestamp}.log"
 
         # Setup logger
-        self.logger = logging.getLogger('HoneyMesh')
+        self.logger = logging.getLogger('HoneyForge')
         self.logger.setLevel(logging.DEBUG)
 
         # Remove any existing handlers
@@ -159,7 +159,7 @@ class HoneyMeshApp:
         # Add handler to logger
         self.logger.addHandler(file_handler)
 
-        self.logger.info("HoneyMesh logging initialized")
+        self.logger.info("HoneyForge logging initialized")
         self.logger.info(f"Log file: {log_file}")
 
         # Store log file path for user reference
@@ -258,7 +258,7 @@ The authors are not responsible for misuse or any damages caused by this softwar
                 print(f"{Colors.RED}Invalid input, please try again{Colors.END}")
 
     def detect_existing_deployment(self) -> bool:
-        """Check if there's an existing HoneyMesh deployment"""
+        """Check if there's an existing HoneyForge deployment"""
         # Check for data directory
         if not self.data_dir.exists():
             return False
@@ -272,14 +272,14 @@ The authors are not responsible for misuse or any damages caused by this softwar
             if not self.docker_client:
                 self.docker_client = docker.from_env()
             containers = self.docker_client.containers.list(all=True)
-            honeymesh_containers = [c for c in containers if any(service_name in c.name for service_name in self.services.values())]
-            return len(honeymesh_containers) > 0
+            honeyforge_containers = [c for c in containers if any(service_name in c.name for service_name in self.services.values())]
+            return len(honeyforge_containers) > 0
         except DockerException:
             return False
 
-    def get_all_honeymesh_deployments(self) -> Dict[str, List]:
+    def get_all_honeyforge_deployments(self) -> Dict[str, List]:
         """
-        Detect all HoneyMesh deployments (default + medium interaction)
+        Detect all HoneyForge deployments (default + medium interaction)
 
         Returns:
             Dict with deployment names as keys and list of containers as values
@@ -292,18 +292,18 @@ The authors are not responsible for misuse or any damages caused by this softwar
 
             containers = self.docker_client.containers.list(all=True)
 
-            # Find all honeymesh containers
+            # Find all honeyforge containers
             for container in containers:
-                if 'honeymesh' in container.name.lower():
+                if 'honeyforge' in container.name.lower():
                     # Parse deployment name from container name
-                    # Pattern: honeymesh-<service>-<deployment> or honeymesh-<service>
+                    # Pattern: honeyforge-<service>-<deployment> or honeyforge-<service>
                     parts = container.name.split('-', 2)
 
                     if len(parts) >= 3:
-                        # Medium interaction: honeymesh-elasticsearch-epic-prod-01
+                        # Medium interaction: honeyforge-elasticsearch-epic-prod-01
                         deployment_name = parts[2]
                     elif len(parts) == 2:
-                        # Default deployment: honeymesh-cowrie
+                        # Default deployment: honeyforge-cowrie
                         deployment_name = 'default'
                     else:
                         continue
@@ -320,7 +320,7 @@ The authors are not responsible for misuse or any damages caused by this softwar
 
     def get_container_status(self, deployment_name: str = 'default') -> Dict[str, Dict]:
         """
-        Get status of HoneyMesh containers for a specific deployment
+        Get status of HoneyForge containers for a specific deployment
 
         Args:
             deployment_name: Name of deployment ('default' for default deployment)
@@ -334,7 +334,7 @@ The authors are not responsible for misuse or any damages caused by this softwar
                 self.docker_client = docker.from_env()
 
             # Get all containers for this deployment
-            all_deployments = self.get_all_honeymesh_deployments()
+            all_deployments = self.get_all_honeyforge_deployments()
 
             if deployment_name not in all_deployments:
                 return status
@@ -370,11 +370,11 @@ The authors are not responsible for misuse or any damages caused by this softwar
         Returns:
             Service type string or None
         """
-        # Remove 'honeymesh-' prefix and deployment suffix
+        # Remove 'honeyforge-' prefix and deployment suffix
         name_lower = container_name.lower()
 
         if deployment_name == 'default':
-            # Pattern: honeymesh-<service>
+            # Pattern: honeyforge-<service>
             if 'elasticsearch' in name_lower:
                 return 'elasticsearch'
             elif 'kibana' in name_lower:
@@ -386,9 +386,9 @@ The authors are not responsible for misuse or any damages caused by this softwar
             elif 'cowrie' in name_lower:
                 return 'cowrie'
         else:
-            # Pattern: honeymesh-<service>-<deployment> or honeymesh-<deployment>
-            # For medium interaction, the cowrie container is: honeymesh-<deployment>
-            if f'honeymesh-{deployment_name}' == name_lower and 'elasticsearch' not in name_lower and 'kibana' not in name_lower:
+            # Pattern: honeyforge-<service>-<deployment> or honeyforge-<deployment>
+            # For medium interaction, the cowrie container is: honeyforge-<deployment>
+            if f'honeyforge-{deployment_name}' == name_lower and 'elasticsearch' not in name_lower and 'kibana' not in name_lower:
                 return 'cowrie'
             elif 'elasticsearch' in name_lower:
                 return 'elasticsearch'
@@ -485,12 +485,12 @@ The authors are not responsible for misuse or any damages caused by this softwar
             self.clear_screen()
             self.print_banner()
 
-            # Check for ANY HoneyMesh deployments (default or medium interaction)
-            all_deployments = self.get_all_honeymesh_deployments()
+            # Check for ANY HoneyForge deployments (default or medium interaction)
+            all_deployments = self.get_all_honeyforge_deployments()
             existing_deployment = len(all_deployments) > 0
 
             if existing_deployment:
-                print(f"{Colors.BOLD}Existing HoneyMesh deployment detected in {self.data_dir}{Colors.END}\n")
+                print(f"{Colors.BOLD}Existing HoneyForge deployment detected in {self.data_dir}{Colors.END}\n")
                 print("Select an option:")
                 print(f"{Colors.GREEN}[M]{Colors.END} Manage existing deployment")
                 print(f"{Colors.BLUE}[N]{Colors.END} Create new deployment")
@@ -827,10 +827,10 @@ The authors are not responsible for misuse or any damages caused by this softwar
     def perform_deployment(self) -> bool:
         """Execute the actual deployment"""
         self.clear_screen()
-        print(f"{Colors.BOLD}Deploying HoneyMesh Environment{Colors.END}\n")
+        print(f"{Colors.BOLD}Deploying HoneyForge Environment{Colors.END}\n")
 
         try:
-            self.logger.info("=== Starting HoneyMesh deployment ===")
+            self.logger.info("=== Starting HoneyForge deployment ===")
             self.logger.info(f"Configuration: {json.dumps(self.config, indent=2)}")
 
             # Log Docker environment
@@ -1382,19 +1382,19 @@ logging.files:
         template = f"""version: '3.8'
 
 networks:
-  honeymesh:
+  honeyforge:
     driver: bridge
 
 services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
-    container_name: honeymesh-elasticsearch
+    container_name: honeyforge-elasticsearch
     environment:
       - discovery.type=single-node
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - xpack.security.enabled=false
       - xpack.security.enrollment.enabled=false
-      - cluster.name=honeymesh-cluster
+      - cluster.name=honeyforge-cluster
       - bootstrap.memory_lock=true
     ulimits:
       memlock:
@@ -1405,7 +1405,7 @@ services:
     ports:
       - "9200:9200"
     networks:
-      - honeymesh
+      - honeyforge
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
@@ -1415,10 +1415,10 @@ services:
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.11.0
-    container_name: honeymesh-kibana
+    container_name: honeyforge-kibana
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-      - SERVER_NAME=honeymesh-kibana
+      - SERVER_NAME=honeyforge-kibana
       - SERVER_HOST=0.0.0.0
     volumes:
       - ./kibana:/usr/share/kibana/data
@@ -1427,7 +1427,7 @@ services:
     depends_on:
       - elasticsearch
     networks:
-      - honeymesh
+      - honeyforge
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:5601/api/status || exit 1"]
@@ -1437,7 +1437,7 @@ services:
 
   logstash:
     image: docker.elastic.co/logstash/logstash:8.11.0
-    container_name: honeymesh-logstash
+    container_name: honeyforge-logstash
     environment:
       - "LS_JAVA_OPTS=-Xms256m -Xmx256m"
     volumes:
@@ -1449,7 +1449,7 @@ services:
     depends_on:
       - elasticsearch
     networks:
-      - honeymesh
+      - honeyforge
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:9600/_node/stats || exit 1"]
@@ -1459,7 +1459,7 @@ services:
 
   cowrie:
     image: cowrie/cowrie:latest
-    container_name: honeymesh-cowrie
+    container_name: honeyforge-cowrie
     user: "1000:1000"
     ports:
       - "{self.config['ssh_port']}:2222"
@@ -1468,12 +1468,12 @@ services:
       - ./cowrie/config:/cowrie/cowrie-git/etc
       - ./cowrie/var:/cowrie/var
     networks:
-      - honeymesh
+      - honeyforge
     restart: unless-stopped
 
   filebeat:
     image: docker.elastic.co/beats/filebeat:8.11.0
-    container_name: honeymesh-filebeat
+    container_name: honeyforge-filebeat
     user: root
     command: filebeat -e --strict.perms=false
     volumes:
@@ -1483,7 +1483,7 @@ services:
       - logstash
       - cowrie
     networks:
-      - honeymesh
+      - honeyforge
     restart: unless-stopped
 """
         return template
@@ -1679,7 +1679,7 @@ services:
     def log_container_logs(self, service: str):
         """Log container logs for debugging"""
         try:
-            container_name = self.services.get(service, f"honeymesh-{service}")
+            container_name = self.services.get(service, f"honeyforge-{service}")
             self.logger.info(f"=== Container logs for {container_name} ===")
 
             container = self.docker_client.containers.get(container_name)
@@ -1690,7 +1690,7 @@ services:
             self.logger.error(f"Could not get logs for {service}: {e}")
 
     def stop_services(self) -> bool:
-        """Stop all HoneyMesh services"""
+        """Stop all HoneyForge services"""
         try:
             original_dir = os.getcwd()
             os.chdir(self.data_dir)
@@ -1814,7 +1814,7 @@ services:
     def show_deployment_success(self):
         """Display successful deployment information"""
         self.clear_screen()
-        print(f"{Colors.GREEN}{Colors.BOLD}HoneyMesh deployment successful!{Colors.END}\n")
+        print(f"{Colors.GREEN}{Colors.BOLD}HoneyForge deployment successful!{Colors.END}\n")
 
         # Get real-time container status
         status = self.get_container_status()
@@ -1900,10 +1900,10 @@ services:
             selected_deployment: Name of deployment to manage (None = auto-select)
         """
         # Detect all deployments
-        all_deployments = self.get_all_honeymesh_deployments()
+        all_deployments = self.get_all_honeyforge_deployments()
 
         if not all_deployments:
-            self.print_status("No HoneyMesh deployments found", "warning")
+            self.print_status("No HoneyForge deployments found", "warning")
             self.wait_for_input()
             return
 
@@ -1931,7 +1931,7 @@ services:
                 except:
                     pass
 
-            print(f"{Colors.BOLD}HoneyMesh Management Console{Colors.END}\n")
+            print(f"{Colors.BOLD}HoneyForge Management Console{Colors.END}\n")
 
             # Show deployment info
             deployment_type = "Default" if selected_deployment == 'default' else "Medium Interaction"
@@ -2228,7 +2228,7 @@ services:
         self.clear_screen()
         print(f"{Colors.BOLD}Restart Services{Colors.END}")
         print(f"Deployment: {deployment_name}\n")
-        print("This will restart all HoneyMesh services. Any active connections will be dropped.")
+        print("This will restart all HoneyForge services. Any active connections will be dropped.")
 
         confirm = self.get_yes_no_input("Continue with restart", False)
 
@@ -2268,7 +2268,7 @@ services:
         print(f"{Colors.BOLD}Backup Deployment{Colors.END}\n")
 
         try:
-            backup_dir = Path(f"./honeymesh-backup-{int(time.time())}")
+            backup_dir = Path(f"./honeyforge-backup-{int(time.time())}")
             backup_dir.mkdir(exist_ok=True)
 
             self.print_status("Creating backup...", "info")
@@ -2338,7 +2338,7 @@ services:
 
     def quit_application(self):
         """Exit the application"""
-        print(f"\n{Colors.CYAN}Thank you for using HoneyMesh!{Colors.END}")
+        print(f"\n{Colors.CYAN}Thank you for using HoneyForge!{Colors.END}")
         sys.exit(0)
 
     def run(self):
@@ -2348,7 +2348,7 @@ services:
 #            if os.geteuid() == 0:
 #                self.clear_screen()
 #                print(f"{Colors.RED}{Colors.BOLD}WARNING: Running as root/sudo detected!{Colors.END}\n")
-#                print(f"{Colors.YELLOW}HoneyMesh should NOT be run as root for security reasons:{Colors.END}")
+#                print(f"{Colors.YELLOW}HoneyForge should NOT be run as root for security reasons:{Colors.END}")
 #                print("• Docker containers will run with elevated privileges")
 #                print("• Log files will be owned by root")
 #                print("• Security risks if honeypot is compromised")
@@ -2358,7 +2358,7 @@ services:
 #                print("1. Exit this script (Ctrl+C)")
 #                print("2. Add your user to docker group: sudo usermod -aG docker $USER")
 #                print("3. Logout and login again")
-#                print("4. Run script as normal user: python3 honeymesh.py")
+#                print("4. Run script as normal user: python3 honeyforge.py")
 
 #                choice = input(f"\n{Colors.RED}Continue running as root anyway? [y/N]: {Colors.END}").strip().lower()
 #                if choice not in ['y', 'yes']:
@@ -2369,7 +2369,7 @@ services:
 #                    time.sleep(2)
 
             # Run dependency check
-            print(f"{Colors.BOLD}HoneyMesh - Checking Dependencies{Colors.END}\n")
+            print(f"{Colors.BOLD}HoneyForge - Checking Dependencies{Colors.END}\n")
 
             checker = DependencyChecker()
             if not checker.check_critical_dependencies():
@@ -2400,7 +2400,7 @@ services:
 
 def main():
     """Application entry point"""
-    app = HoneyMeshApp()
+    app = HoneyForgeApp()
     app.run()
 
 if __name__ == "__main__":

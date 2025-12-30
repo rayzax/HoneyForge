@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-HoneyMesh Dependency Checker
+HoneyForge Dependency Checker
 Verifies all required dependencies are installed and properly configured
 """
 
@@ -177,7 +177,7 @@ class DependencyChecker:
             
     def run_all_checks(self):
         """Run all dependency checks"""
-        print(f"{Colors.BOLD}HoneyMesh Dependency Check{Colors.END}\n")
+        print(f"{Colors.BOLD}HoneyForge Dependency Check{Colors.END}\n")
         
         print(f"{Colors.BLUE}Checking Python environment...{Colors.END}")
         self.check_python_version()
@@ -247,7 +247,7 @@ def main():
     # Check if running as root/sudo - this should NOT be the case
     if os.geteuid() == 0:
         print(f"{Colors.RED}{Colors.BOLD}WARNING: Running as root/sudo detected!{Colors.END}\n")
-        print(f"{Colors.YELLOW}HoneyMesh should NOT be run as root for security reasons:{Colors.END}")
+        print(f"{Colors.YELLOW}HoneyForge should NOT be run as root for security reasons:{Colors.END}")
         print("• Docker containers will run with elevated privileges")
         print("• Log files will be owned by root") 
         print("• Security risks if honeypot is compromised")
@@ -271,11 +271,11 @@ def main():
         success = checker.run_all_checks()
         
         if success:
-            print(f"\n{Colors.GREEN}{Colors.BOLD}All dependencies satisfied! HoneyMesh is ready to run.{Colors.END}")
+            print(f"\n{Colors.GREEN}{Colors.BOLD}All dependencies satisfied! HoneyForge is ready to run.{Colors.END}")
             return 0
         else:
             checker.print_installation_help()
-            print(f"\n{Colors.RED}{Colors.BOLD}Please fix the above issues before running HoneyMesh.{Colors.END}")
+            print(f"\n{Colors.RED}{Colors.BOLD}Please fix the above issues before running HoneyForge.{Colors.END}")
             return 1
             
     except KeyboardInterrupt:

@@ -32,10 +32,10 @@ env/
 *.swo
 *~
 
-# HoneyMesh specific
+# HoneyForge specific
 honeypot-data/
-honeymesh-logs/
-honeymesh-backup-*/
+honeyforge-logs/
+honeyforge-backup-*/
 
 # Docker
 .docker/

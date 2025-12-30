@@ -1,9 +1,9 @@
 #!/bin/bash
 #
-# HoneyMesh Complete Teardown Script
-# This script removes all HoneyMesh containers, networks, volumes, and data directories
+# HoneyForge Complete Teardown Script
+# This script removes all HoneyForge containers, networks, volumes, and data directories
 #
-# Usage: ./teardown_honeymesh.sh [OPTIONS]
+# Usage: ./teardown_honeyforge.sh [OPTIONS]
 # Options:
 #   --keep-logs    Keep log files (don't delete honeypot-data/logs)
 #   --keep-data    Keep all data directories (only remove containers)
@@ -41,7 +41,7 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
         --help)
-            echo "HoneyMesh Teardown Script"
+            echo "HoneyForge Teardown Script"
             echo ""
             echo "Usage: $0 [OPTIONS]"
             echo ""
@@ -96,7 +96,7 @@ echo -e "${BOLD}${RED}"
 cat << "EOF"
 ╔══════════════════════════════════════════════════════════════╗
 ║                                                              ║
-║           HoneyMesh Complete Teardown Script                ║
+║           HoneyForge Complete Teardown Script                ║
 ║                                                              ║
 ╚══════════════════════════════════════════════════════════════╝
 EOF
@@ -104,8 +104,8 @@ echo -e "${END}"
 
 # Show what will be removed
 echo -e "${BOLD}This script will remove:${END}"
-echo "  • All HoneyMesh Docker containers (honeymesh-*)"
-echo "  • HoneyMesh Docker network"
+echo "  • All HoneyForge Docker containers (honeyforge-*)"
+echo "  • HoneyForge Docker network"
 echo "  • Docker volumes"
 
 if [ "$KEEP_DATA" = false ]; then
@@ -117,7 +117,7 @@ else
     echo "  ${GREEN}• Data directories will be preserved${END}"
 fi
 
-echo "  • honeymesh-logs directory"
+echo "  • honeyforge-logs directory"
 echo ""
 
 # Confirmation prompt unless --force is used
@@ -132,11 +132,11 @@ if [ "$FORCE" = false ]; then
 fi
 
 echo ""
-print_status "Starting HoneyMesh teardown..." "info"
+print_status "Starting HoneyForge teardown..." "info"
 echo ""
 
 # Step 1: Stop and remove containers
-print_status "Stopping HoneyMesh containers..." "info"
+print_status "Stopping HoneyForge containers..." "info"
 
 # Check if honeypot-data directory exists with docker-compose.yml
 if [ -d "./honeypot-data" ] && [ -f "./honeypot-data/docker-compose.yml" ]; then
@@ -153,10 +153,10 @@ if [ -d "./honeypot-data" ] && [ -f "./honeypot-data/docker-compose.yml" ]; then
 fi
 
 # Stop individual containers by name pattern
-CONTAINERS=$(docker ps -a --filter "name=honeymesh-" --format "{{.Names}}" 2>/dev/null || true)
+CONTAINERS=$(docker ps -a --filter "name=honeyforge-" --format "{{.Names}}" 2>/dev/null || true)
 
 if [ -n "$CONTAINERS" ]; then
-    print_status "Found HoneyMesh containers:" "info"
+    print_status "Found HoneyForge containers:" "info"
     echo "$CONTAINERS" | while read -r container; do
         echo "  - $container"
     done
@@ -165,19 +165,19 @@ if [ -n "$CONTAINERS" ]; then
         docker stop "$container" 2>/dev/null || true
         docker rm "$container" 2>/dev/null || true
     done
-    print_status "All HoneyMesh containers removed" "success"
+    print_status "All HoneyForge containers removed" "success"
 else
-    print_status "No HoneyMesh containers found" "info"
+    print_status "No HoneyForge containers found" "info"
 fi
 
 # Step 2: Remove Docker network
 print_status "Removing Docker network..." "info"
 
-if docker network ls | grep -q "honeymesh"; then
-    docker network rm honeymesh 2>/dev/null || true
-    print_status "HoneyMesh network removed" "success"
+if docker network ls | grep -q "honeyforge"; then
+    docker network rm honeyforge 2>/dev/null || true
+    print_status "HoneyForge network removed" "success"
 else
-    print_status "HoneyMesh network not found" "info"
+    print_status "HoneyForge network not found" "info"
 fi
 
 # Step 3: Clean up Docker volumes
@@ -202,7 +202,7 @@ if [ "$KEEP_DATA" = false ]; then
         if [ "$KEEP_LOGS" = true ]; then
             # Backup logs
             if [ -d "./honeypot-data/logs" ]; then
-                BACKUP_DIR="./honeymesh-logs-backup-$(date +%Y%m%d_%H%M%S)"
+                BACKUP_DIR="./honeyforge-logs-backup-$(date +%Y%m%d_%H%M%S)"
                 mkdir -p "$BACKUP_DIR"
                 cp -r ./honeypot-data/logs/* "$BACKUP_DIR/" 2>/dev/null || true
                 print_status "Logs backed up to: $BACKUP_DIR" "success"
@@ -225,22 +225,22 @@ else
     print_status "Keeping honeypot-data directory as requested" "info"
 fi
 
-# Step 5: Remove honeymesh-logs directory
-print_status "Removing honeymesh-logs directory..." "info"
+# Step 5: Remove honeyforge-logs directory
+print_status "Removing honeyforge-logs directory..." "info"
 
-if [ -d "./honeymesh-logs" ]; then
+if [ -d "./honeyforge-logs" ]; then
     if check_root; then
-        rm -rf ./honeymesh-logs
+        rm -rf ./honeyforge-logs
     else
-        rm -rf ./honeymesh-logs 2>/dev/null || sudo rm -rf ./honeymesh-logs
+        rm -rf ./honeyforge-logs 2>/dev/null || sudo rm -rf ./honeyforge-logs
     fi
-    print_status "honeymesh-logs directory removed" "success"
+    print_status "honeyforge-logs directory removed" "success"
 else
-    print_status "honeymesh-logs directory not found" "info"
+    print_status "honeyforge-logs directory not found" "info"
 fi
 
 # Step 6: Clean up any backup directories (optional)
-BACKUPS=$(ls -d ./honeymesh-backup-* 2>/dev/null || true)
+BACKUPS=$(ls -d ./honeyforge-backup-* 2>/dev/null || true)
 
 if [ -n "$BACKUPS" ]; then
     echo ""
@@ -284,7 +284,7 @@ fi
 # Final summary
 echo ""
 echo -e "${GREEN}${BOLD}════════════════════════════════════════════════════════${END}"
-echo -e "${GREEN}${BOLD}  HoneyMesh Teardown Complete!${END}"
+echo -e "${GREEN}${BOLD}  HoneyForge Teardown Complete!${END}"
 echo -e "${GREEN}${BOLD}════════════════════════════════════════════════════════${END}"
 echo ""
 
@@ -299,12 +299,12 @@ else
     echo "  • Data directories preserved"
 fi
 
-if [ "$KEEP_LOGS" = true ] && [ -d "./honeymesh-logs-backup-"* ]; then
+if [ "$KEEP_LOGS" = true ] && [ -d "./honeyforge-logs-backup-"* ]; then
     echo "  ✓ Logs backed up"
 fi
 
 echo ""
-print_status "Your system is now clean of HoneyMesh components" "success"
+print_status "Your system is now clean of HoneyForge components" "success"
 echo ""
 
 exit 0
