@@ -30,6 +30,7 @@
   <p>
     <a class="welcome-button" href="https://honeymesh.readthedocs.io/en/latest/docs/Production%20Deployment%20Recommendations">Get Started →</a>
   </p>
+</section>
 
 
 
